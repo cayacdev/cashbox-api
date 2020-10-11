@@ -1,7 +1,4 @@
 <?php
-
-/** @var \Laravel\Lumen\Routing\Router $router */
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,17 +10,20 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return App::version();
 });
 
 
-$router->group([
+Route::group([
     'prefix' => 'auth/v1'
 ], function ($router) {
-    $router->post('register', 'AuthController@register');
-    $router->post('login', 'AuthController@login');
-    $router->post('logout', 'AuthController@logout');
-    $router->post('refresh', 'AuthController@refresh');
-    $router->post('me', 'AuthController@me');
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
 });
