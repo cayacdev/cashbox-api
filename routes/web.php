@@ -19,7 +19,7 @@ $router->get('/', function () use ($router) {
 
 
 $router->group([
-    'prefix' => 'auth'
+    'prefix' => 'auth/v1'
 ], function ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
