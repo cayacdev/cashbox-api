@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class CashBoxController extends Controller
 {
     /**
-     * Create a new AuthController instance.
+     * Constructor
      *
      * @return void
      */

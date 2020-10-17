@@ -25,12 +25,27 @@ Route::group([
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+    Route::get('me', 'AuthController@me');
 });
 
 Route::group([
     'prefix' => 'v1/cash-boxes'
 ], function ($router) {
+    Route::group([
+        'prefix' => '{cashBoxId}/plans'
+    ], function ($router) {
+        Route::group(['prefix' => '{planId}/entries'], function ($router) {
+            Route::post('', 'CashBoxBudgetPlanEntryController@store');
+            Route::put('{id}', 'CashBoxBudgetPlanEntryController@update');
+            Route::delete('{id}', 'CashBoxBudgetPlanEntryController@destroy');
+        });
+        Route::get('', 'CashBoxBudgetPlanController@index');
+        Route::get('active', 'CashBoxBudgetPlanController@active');
+        Route::get('{id}', 'CashBoxBudgetPlanController@show');
+        Route::post('', 'CashBoxBudgetPlanController@store');
+        Route::put('{id}', 'CashBoxBudgetPlanController@update');
+        Route::delete('{id}', 'CashBoxBudgetPlanController@destroy');
+    });
     Route::get('', 'CashBoxController@index');
     Route::get('{id}', 'CashBoxController@show');
     Route::post('', 'CashBoxController@store');
