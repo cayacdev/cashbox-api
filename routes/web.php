@@ -19,11 +19,21 @@ Route::get('/', function () {
 
 
 Route::group([
-    'prefix' => 'auth/v1'
+    'prefix' => 'v1/auth'
 ], function ($router) {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
+});
+
+Route::group([
+    'prefix' => 'v1/cash-boxes'
+], function ($router) {
+    Route::get('', 'CashBoxController@index');
+    Route::get('{id}', 'CashBoxController@show');
+    Route::post('', 'CashBoxController@store');
+    Route::put('{id}', 'CashBoxController@update');
+    Route::delete('{id}', 'CashBoxController@destroy');
 });

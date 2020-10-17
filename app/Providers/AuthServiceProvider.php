@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\CashBox;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -34,6 +35,11 @@ class AuthServiceProvider extends ServiceProvider
             if ($request->input('api_token')) {
                 return User::where('api_token', $request->input('api_token'))->first();
             }
+        });
+
+        Gate::define('cashBoxMember', function ($user, $cashBox) {
+            /* @var $cashBox CashBox */
+            return $cashBox->users->contains('id', $user->id);
         });
     }
 }

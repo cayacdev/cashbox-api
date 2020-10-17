@@ -1,0 +1,135 @@
+### Authorization by token, part 1. Retrieve and save token.
+POST {{domain}}/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@mailinator.com",
+  "name": "Test",
+  "password": "123456"
+}
+
+### Authorization by token, part 1. Retrieve and save token.
+POST {{domain}}/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@mailinator.com",
+  "password": "123456"
+}
+
+> {% client.global.set("auth_token", response.body.access_token); %}
+
+### Authorization by token, part 2. Use token to authorize.
+GET {{domain}}/v1/auth/me
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Get all user related cashboxes
+GET {{domain}}/v1/cash-boxes
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Create a new Cashbox
+POST {{domain}}/v1/cash-boxes
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "New Test Cash Box",
+  "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
+}
+
+### Show cashbox with id 1
+GET {{domain}}/v1/cash-boxes/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+
+### Update cashbox with id 1
+PUT {{domain}}/v1/cash-boxes/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Test Cash Box",
+  "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
+}
+
+### Delete cashbox with id 1
+DELETE {{domain}}/v1/cash-boxes/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Create a new Cashbox Budget Plan
+POST {{domain}}/api/cash-boxes/1/plans
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Budget Plan Test",
+  "budget": 100,
+  "start_date": "2020-08-01",
+  "end_date": "2020-08-31"
+}
+
+### Show cashbox budget plans from cashbox with id 1
+GET {{domain}}/api/cash-boxes/1/plans
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Update Cashbox Budget Plan
+PUT {{domain}}/api/cash-boxes/1/plans/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Budget Plan Test"
+}
+
+### Show cashbox budget plan with id 1
+GET {{domain}}/api/cash-boxes/1/plans/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Show active cashbox budget plan
+GET {{domain}}/api/cash-boxes/1/plans/active
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Delete cashbox budget plan with id 1
+DELETE {{domain}}/api/cash-boxes/1/plans/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Create a new Cashbox Budget Plan entry
+POST {{domain}}/api/cash-boxes/1/plans/1/entries
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "description": "Food",
+  "value": 10,
+  "date": "2020-08-01"
+}
+
+### Update Cashbox Budget Plan entry
+PUT {{domain}}/api/cash-boxes/1/plans/1/entries/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "description": "Updated Food",
+  "value": 20,
+  "date": "2020-08-02"
+}
+
+### Delete Cashbox Budget Plan entry
+DELETE {{domain}}/api/cash-boxes/1/plans/1/entries/1
+Accept: application/json
+Authorization: Bearer {{auth_token}}
