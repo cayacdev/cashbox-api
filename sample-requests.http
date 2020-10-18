@@ -13,8 +13,8 @@ POST {{domain}}/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "test@mailinator.com",
-  "password": "123456"
+    "email": "test@mailinator.com",
+    "password": "123456"
 }
 
 > {% client.global.set("auth_token", response.body.access_token); %}
@@ -23,6 +23,17 @@ Content-Type: application/json
 GET {{domain}}/v1/auth/me
 Accept: application/json
 Authorization: Bearer {{auth_token}}
+
+### Change Password
+PUT {{domain}}/v1/auth/changePassword
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+    "oldPassword": "123456",
+    "password": "12345678"
+}
 
 ### Get all user related cashboxes
 GET {{domain}}/v1/cash-boxes

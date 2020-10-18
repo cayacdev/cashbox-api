@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
@@ -57,6 +60,27 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json(Auth::user());
+    }
+
+    /**
+     * @param Request $request
+     * @throws ValidationException
+     */
+    public function changePassword(Request $request)
+    {
+        $this->validate($request, [
+            'oldPassword' => 'required',
+            'password' => 'required'
+        ]);
+
+        /* @var $user User */
+        $user = auth()->user();
+        $credentials = ['email' => $user->email, 'password' => $request->get('oldPassword')];
+        if (!auth()->validate($credentials)) {
+            throw new HttpException(Response::HTTP_UNAUTHORIZED, 'Old password is incorrect');
+        }
+        $user->password = app('hash')->make($request->get('password'), ['rounds' => 12]);
+        $user->save();
     }
 
     /**
