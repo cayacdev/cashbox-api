@@ -13,7 +13,7 @@ POST {{domain}}/v1/auth/login
 Content-Type: application/json
 
 {
-    "email": "test@mailinator.com",
+    "email": "pmueller.wf@gmail.com",
     "password": "123456"
 }
 
@@ -69,7 +69,7 @@ Content-Type: application/json
 }
 
 ### Create a new Cashbox Budget Plan
-POST {{domain}}/v1/cash-boxes/1/plans
+POST {{domain}}/v1/cash-boxes/3/plans
 Accept: application/json
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
@@ -82,7 +82,7 @@ Content-Type: application/json
 }
 
 ### Show cashbox budget plans from cashbox with id 1
-GET {{domain}}/v1/cash-boxes/1/plans
+GET {{domain}}/v1/cash-boxes/3/plans
 Accept: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -104,13 +104,18 @@ GET {{domain}}/v1/cash-boxes/1/plans/1
 Accept: application/json
 Authorization: Bearer {{auth_token}}
 
+### Show reports of cashbox budget plan with id 1
+GET {{domain}}/v1/cash-boxes/1/plans/1/reports
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
 ### Show active cashbox budget plan
 GET {{domain}}/v1/cash-boxes/1/plans/active
 Accept: application/json
 Authorization: Bearer {{auth_token}}
 
 ### Create a new Cashbox Budget Plan entry
-POST {{domain}}/v1/cash-boxes/1/plans/1/entries
+POST {{domain}}/v1/cash-boxes/3/plans/9/entries
 Accept: application/json
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json

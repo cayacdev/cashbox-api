@@ -131,4 +131,53 @@ class CashBoxBudgetPlan extends Model
             ->select($table . '.*')
             ->where($pivot . '.' . $secondKey, '=', $this->$secondKey);
     }
+
+    public function calculateRemainingBudget()
+    {
+        $remainingBudget = $this->budget - $this->calculatePaidOverall();
+        return round($remainingBudget, 2);
+    }
+
+    public function calculatePaidOverall()
+    {
+        $paidOverall = $this->entries()->sum('value');
+        return round($paidOverall, 2);
+    }
+
+    public function calculatePaidByUser()
+    {
+        return $this->entries()->selectRaw('name, round(sum(value),2) as value')
+            ->groupBy('user_id')
+            ->leftJoin('users', 'users.id', '=', 'user_id')
+            ->get();
+    }
+
+    public function calculateDebtsByUser()
+    {
+        $paidOverall = $this->calculatePaidOverall();
+        $paidByUsers = $this->calculatePaidByUser();
+
+        $userShouldPay = $paidOverall / count($paidByUsers);
+
+        $overPaidUsers = [];
+        $lessPaidUsers = [];
+        foreach ($paidByUsers as $paidByUser) {
+            if ($paidByUser->value > $userShouldPay) {
+                $overPaidUsers[$paidByUser->name] = $paidByUser->value - $userShouldPay;
+            } else {
+                $lessPaidUsers[$paidByUser->name] = $userShouldPay - $paidByUser->value;
+            }
+        }
+
+        $debtsByUsers = [];
+        foreach ($lessPaidUsers as $lessPaidUser => $debts) {
+            foreach ($overPaidUsers as $overPaidUser => $openDebts) {
+                $value = $debts >= $openDebts ? $openDebts : $debts;
+                $overPaidUsers[$overPaidUser] -= $value;
+                $debtsByUsers[$lessPaidUser][$overPaidUser] = round($value, 2);
+            }
+        }
+
+        return $debtsByUsers;
+    }
 }

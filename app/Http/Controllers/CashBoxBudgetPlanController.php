@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\CashBox;
 use App\Models\CashBoxBudgetPlan;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -82,10 +84,33 @@ class CashBoxBudgetPlanController extends Controller
     public function show(string $cashBoxId, string $id)
     {
         $plan = $this->getPlanThroughCashBox($cashBoxId, $id);
-        if(!$plan) {
+        if (!$plan) {
             throw new HttpException(Response::HTTP_NOT_FOUND);
         }
         return response()->json($plan->load('entries.user'));
+    }
+
+    /**
+     * Get the reports for a specific resource.
+     *
+     * @param string $cashBoxId
+     * @param string $id
+     * @return JsonResponse
+     * @throws AuthorizationException
+     */
+    public function showReports(string $cashBoxId, string $id)
+    {
+        /* @var $plan CashBoxBudgetPlan */
+        $plan = $this->getPlanThroughCashBox($cashBoxId, $id);
+        if (!$plan) {
+            throw new HttpException(Response::HTTP_NOT_FOUND);
+        }
+        return response()->json([
+            'remainingBudget' => $plan->calculateRemainingBudget(),
+            'paidOverall' => $plan->calculatePaidOverall(),
+            'paidByUser' => $plan->calculatePaidByUser(),
+            'debtsByUser' => $plan->calculateDebtsByUser()
+        ]);
     }
 
     /**
@@ -180,7 +205,7 @@ class CashBoxBudgetPlanController extends Controller
     /**
      * @param string $cashBoxId
      * @param string $id
-     * @return mixed
+     * @return CashBoxBudgetPlan|Model|HasMany|object
      * @throws AuthorizationException
      */
     public function getPlanThroughCashBox(string $cashBoxId, string $id)
@@ -188,4 +213,5 @@ class CashBoxBudgetPlanController extends Controller
         $cashBox = $this->findCashBox($cashBoxId);
         return $cashBox->budgetPlans()->where('id', '=', $id)->first();
     }
+
 }

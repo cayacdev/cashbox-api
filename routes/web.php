@@ -42,6 +42,7 @@ Route::group([
         });
         Route::get('', 'CashBoxBudgetPlanController@index');
         Route::get('active', 'CashBoxBudgetPlanController@active');
+        Route::get('{id}/reports', 'CashBoxBudgetPlanController@showReports');
         Route::get('{id}', 'CashBoxBudgetPlanController@show');
         Route::post('', 'CashBoxBudgetPlanController@store');
         Route::put('{id}', 'CashBoxBudgetPlanController@update');
