@@ -174,7 +174,11 @@ class CashBoxBudgetPlan extends Model
             foreach ($overPaidUsers as $overPaidUser => $openDebts) {
                 $value = $debts >= $openDebts ? $openDebts : $debts;
                 $overPaidUsers[$overPaidUser] -= $value;
-                $debtsByUsers[$lessPaidUser][$overPaidUser] = round($value, 2);
+                array_push($debtsByUsers, [
+                    'debtor' => $lessPaidUser,
+                    'creditor' => $overPaidUser,
+                    'value' => round($value, 2)
+                ]);
             }
         }
 
