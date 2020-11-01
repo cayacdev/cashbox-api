@@ -72,10 +72,10 @@ class CashBox extends Model
     {
         $plans = $this->budgetPlans();
         return $plans->where(function ($query) {
-            $now = DB::raw('NOW()');
+            $now = DB::raw('CURDATE()');
             $query
-                ->where('start_date', '<', $now)
-                ->where('end_date', '>', $now);
+                ->where('start_date', '<=', $now)
+                ->where('end_date', '>=', $now);
 
         });
     }

@@ -128,6 +128,7 @@ class CashBoxBudgetPlanController extends Controller
         $plan = $this->getPlanThroughCashBox($cashBoxId, $id);
         $this->validateCashBoxBudgetPlan($request);
 
+        $plan->fill($request->all());
         $conflictedPlans = $plan->getConflictedPlans($id);
         if ($conflictedPlans->count() > 0) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'The plan overlaps with other plans');
